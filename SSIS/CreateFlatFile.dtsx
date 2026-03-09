@@ -1,0 +1,3293 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="7/5/2023 10:57:23 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="D002098"
+  DTS:CreatorName="dwmha\ldevabathini"
+  DTS:DelayValidation="True"
+  DTS:DTSID="{F9BD725C-C0C7-4D78-9E16-E1A14BB723C0}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.1301.433"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="60"
+  DTS:VersionGUID="{AC7BFF0F-7331-47FD-B299-AB98DDAE8385}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[dwm-sql-01p,50000.Work]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{525145B1-2E3B-428B-B1D2-2520ECA69879}"
+      DTS:ObjectName="dwm-sql-01p,50000.Work">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=dwm-sql-01p,50000;Initial Catalog=Work;Provider=SQLNCLI11.1;Integrated Security=SSPI;Application Name=SSIS-Package1-{525145B1-2E3B-428B-B1D2-2520ECA69879}dwm-sql-01p,50000.Work;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Excel Connection Manager]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{336B0F0D-CCFF-45D5-A27F-7104A9DF566D}"
+      DTS:ObjectName="Excel Connection Manager">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\Outgoing\PIEventReportAnalysis.xls;Extended Properties=&quot;EXCEL 8.0;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SMTP Connection Manager]"
+      DTS:CreationName="SMTP"
+      DTS:DTSID="{D2F8179B-A8EA-48B3-9AFF-C55DF4F9E9C8}"
+      DTS:ObjectName="SMTP Connection Manager">
+      <DTS:ObjectData>
+        <SmtpConnectionManager
+          ConnectionString="SmtpServer=172.16.100.127;UseWindowsAuthentication=True;EnableSsl=False;Timeout=100000;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{3E255861-823D-46D2-A065-B9F6AD2FCDCA}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="ArchiveFolder">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\Outgoing\Archive\</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{899BCB85-82A1-4255-8CDC-56D7387D391A}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="(DT_WSTR, 4) YEAR(GETDATE())+ RIGHT(&quot;0&quot; + (DT_WSTR, 2) MONTH(GETDATE()), 2) &#xA;&#xA;+ RIGHT(&quot;0&quot; + (DT_WSTR, 2) DAY( GETDATE()),2)+&quot;_&quot;+Right(&quot;0&quot; + (DT_STR,2,1252) DatePart(&quot;hh&quot;,getdate()),2) &#xA;+ Right(&quot;0&quot; + (DT_STR,2,1252) DatePart(&quot;mi&quot;,getdate()),2)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="Currentdate_varchar">
+      <DTS:VariableValue
+        DTS:DataType="8">20250217_1413</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2A68B676-9199-4CFB-979A-6C41470D860F}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="ExcelFolderName">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\Outgoing\</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4AE0D294-4028-4BAD-88DF-F18AEADFF4C2}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[User::ExcelFolderName]+ &quot;PIEventReportAnalysis.xls&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="FileNameoriginal">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\Outgoing\PIEventReportAnalysis.xls</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{FA35FFC1-F686-4BA3-B283-B80A49F57A29}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[User::ArchiveFolder] + &quot;PIEventReportAnalysis&quot;+&quot;_&quot;+ @[User::Currentdate_varchar]+&quot;_Processed&quot;+&quot;.xls&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="FileNameProcessesd">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\Outgoing\Archive\PIEventReportAnalysis_20250217_1413_Processed.xls</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{AC3FC451-C2B6-4C7F-8B7F-EB5673F70D42}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[User::ExcelFolderName]+ &quot;PIEventReportAnalysis&quot;+&quot;_&quot;+ @[User::Currentdate_varchar]+&quot;.xls&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="FileNameWithDate">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\Outgoing\PIEventReportAnalysis_20250217_1413.xls</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CBDD1DA4-F065-4F6A-9E4B-EA9C797A2845}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;Please find the attached for PIEventReportAnalysis report for the date of &quot;+ @[User::Currentdate_varchar]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="Message">
+      <DTS:VariableValue
+        DTS:DataType="8">Please find the attached for PIEventReportAnalysis report for the date of 20250217_1413</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C0114117-2556-4D21-8CE6-C6DF1EC69E63}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="outgoingfolder">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\Outgoing\</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E2223967-19B4-43CA-8689-3E7D0845C110}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[User::TemplateFolderName] + &quot;PIEventReportAnalysis.xls&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="TemplateFile">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\RacialDisparityExcelTemplate\PIEventReportAnalysis.xls</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B5CCC8DA-0CEA-449C-948D-D91276E3E6A3}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="TemplateFolderName">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\RacialDisparityExcelTemplate\</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\AddDatetotheexcelfile"
+      DTS:CreationName="Microsoft.FileSystemTask"
+      DTS:Description="File System Task"
+      DTS:DTSID="{85B22B6E-11F2-4CFC-9182-0498318826BF}"
+      DTS:ExecutableType="Microsoft.FileSystemTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="AddDatetotheexcelfile"
+      DTS:TaskContact="File System Task;Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <FileSystemData
+          TaskOperationType="RenameFile"
+          TaskSourcePath="User::FileNameoriginal"
+          TaskIsSourceVariable="True"
+          TaskDestinationPath="User::FileNameWithDate"
+          TaskIsDestinationVariable="True" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\AddTemplateExcelFiletofolder"
+      DTS:CreationName="Microsoft.FileSystemTask"
+      DTS:Description="File System Task"
+      DTS:DTSID="{93F6F49C-B9A0-4AE3-9D94-77431A818662}"
+      DTS:ExecutableType="Microsoft.FileSystemTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="AddTemplateExcelFiletofolder"
+      DTS:TaskContact="File System Task;Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <FileSystemData
+          TaskSourcePath="User::TemplateFile"
+          TaskIsSourceVariable="True"
+          TaskDestinationPath="User::FileNameoriginal"
+          TaskIsDestinationVariable="True" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\By CRSP"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{8CB5FAAB-10AE-406A-8BBF-AF38EE78C664}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="By CRSP"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\By CRSP\By Race"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="By Race"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select	CRSPAtEvent, Race1 as Race
+		, sum(TotalEvents - OmittedExcludedEvents) as IncludedEvents
+		, sum(CompliantEvents) as CompliantEvents
+		, sum(case when Population = 'Adult' then TotalEvents - OmittedExcludedEvents else 0 end) as AdultIncludedEvents
+		, sum(case when Population = 'Adult' then CompliantEvents else 0 end) as AdultCompliantEvents
+		, sum(case when Population = 'Child' then TotalEvents - OmittedExcludedEvents else 0 end) as ChildIncludedEvents
+		, sum(case when Population = 'Child' then CompliantEvents else 0 end) as ChildCompliantEvents
+, sum(NonCompliantServiceCount) as NonCompliantServiceCount
+from work.dbo.ldRaciaDisparityAggr
+group by CRSPAtEvent, Race1 
+order by CRSPAtEvent, Race1</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\By CRSP\By Race.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[dwm-sql-01p,50000.Work]"
+                  connectionManagerRefId="Package.ConnectionManagers[dwm-sql-01p,50000.Work]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[Race]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[Race]"
+                      length="50"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[Race]"
+                      name="Race"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[IncludedEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]"
+                      name="IncludedEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[CompliantEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]"
+                      name="CompliantEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[AdultIncludedEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]"
+                      name="AdultIncludedEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[AdultCompliantEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]"
+                      name="AdultCompliantEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[ChildIncludedEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]"
+                      name="ChildIncludedEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[ChildCompliantEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]"
+                      name="ChildCompliantEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[CRSPAtEvent]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[CRSPAtEvent]"
+                      length="255"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[CRSPAtEvent]"
+                      name="CRSPAtEvent"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[NonCompliantServiceCount]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[NonCompliantServiceCount]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[NonCompliantServiceCount]"
+                      name="NonCompliantServiceCount"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[Race]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="Race" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[IncludedEvents]"
+                      dataType="i4"
+                      name="IncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[CompliantEvents]"
+                      dataType="i4"
+                      name="CompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[AdultIncludedEvents]"
+                      dataType="i4"
+                      name="AdultIncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[AdultCompliantEvents]"
+                      dataType="i4"
+                      name="AdultCompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[ChildIncludedEvents]"
+                      dataType="i4"
+                      name="ChildIncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[ChildCompliantEvents]"
+                      dataType="i4"
+                      name="ChildCompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[CRSPAtEvent]"
+                      dataType="wstr"
+                      length="255"
+                      name="CRSPAtEvent" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].ExternalColumns[NonCompliantServiceCount]"
+                      dataType="i4"
+                      name="NonCompliantServiceCount" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[CRSPAtEvent]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[CRSPAtEvent]"
+                      name="CRSPAtEvent" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[Race]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[Race]"
+                      name="Race" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[IncludedEvents]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[IncludedEvents]"
+                      name="IncludedEvents" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[CompliantEvents]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[CompliantEvents]"
+                      name="CompliantEvents" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[AdultIncludedEvents]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[AdultIncludedEvents]"
+                      name="AdultIncludedEvents" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[AdultCompliantEvents]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[AdultCompliantEvents]"
+                      name="AdultCompliantEvents" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[ChildIncludedEvents]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[ChildIncludedEvents]"
+                      name="ChildIncludedEvents" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[ChildCompliantEvents]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[ChildCompliantEvents]"
+                      name="ChildCompliantEvents" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[NonCompliantServiceCount]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[NonCompliantServiceCount]"
+                      name="NonCompliantServiceCount" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\By CRSP\Data Conversion"
+              componentClassID="Microsoft.DataConvert"
+              contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Data Conversion"
+              name="Data Conversion"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\By CRSP\Data Conversion.Inputs[Data Conversion Input]"
+                  name="Data Conversion Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\By CRSP\Data Conversion.Inputs[Data Conversion Input].Columns[TotalCompliant]"
+                      cachedDataType="numeric"
+                      cachedName="TotalCompliant"
+                      cachedPrecision="34"
+                      cachedScale="11"
+                      lineageId="Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[TotalCompliant]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Data Conversion.Inputs[Data Conversion Input].Columns[AdultCompliant]"
+                      cachedDataType="numeric"
+                      cachedName="AdultCompliant"
+                      cachedPrecision="34"
+                      cachedScale="11"
+                      lineageId="Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[AdultCompliant]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Data Conversion.Inputs[Data Conversion Input].Columns[ChildCompliant]"
+                      cachedDataType="numeric"
+                      cachedName="ChildCompliant"
+                      cachedPrecision="34"
+                      cachedScale="11"
+                      lineageId="Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[ChildCompliant]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Data Conversion.Inputs[Data Conversion Input].Columns[CRSPAtEvent]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="CRSPAtEvent"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[CRSPAtEvent]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Data Conversion.Inputs[Data Conversion Input].Columns[Race]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="Race"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[Race]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output]"
+                  exclusionGroup="1"
+                  name="Data Conversion Output"
+                  synchronousInputId="Package\By CRSP\Data Conversion.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of TotalCompliant]"
+                      dataType="decimal"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of TotalCompliant]"
+                      name="Copy of TotalCompliant"
+                      scale="2"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[TotalCompliant]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of AdultCompliant]"
+                      dataType="decimal"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of AdultCompliant]"
+                      name="Copy of AdultCompliant"
+                      scale="2"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[AdultCompliant]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of ChildCompliant]"
+                      dataType="decimal"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of ChildCompliant]"
+                      name="Copy of ChildCompliant"
+                      scale="2"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[ChildCompliant]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of CRSPAtEvent]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="255"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of CRSPAtEvent]"
+                      name="Copy of CRSPAtEvent"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[CRSPAtEvent]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of Race]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="50"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of Race]"
+                      name="Copy of Race"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[Race]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Data Conversion Error Output"
+                  synchronousInputId="Package\By CRSP\Data Conversion.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\By CRSP\Derived Column"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Derived Column"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\By CRSP\Derived Column.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\By CRSP\Derived Column.Inputs[Derived Column Input].Columns[IncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="IncludedEvents"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Derived Column.Inputs[Derived Column Input].Columns[CompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="CompliantEvents"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Derived Column.Inputs[Derived Column Input].Columns[AdultIncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="AdultIncludedEvents"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Derived Column.Inputs[Derived Column Input].Columns[AdultCompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="AdultCompliantEvents"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Derived Column.Inputs[Derived Column Input].Columns[ChildIncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="ChildIncludedEvents"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Derived Column.Inputs[Derived Column Input].Columns[ChildCompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="ChildCompliantEvents"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\By CRSP\Derived Column.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\By CRSP\Derived Column.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[TotalCompliant]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[TotalCompliant]"
+                      name="TotalCompliant"
+                      precision="34"
+                      scale="11"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]} &gt; 0 ? (#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]} / (DT_NUMERIC,10,2)#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]}) * 100 : 0</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">IncludedEvents &gt; 0 ? (CompliantEvents / (DT_NUMERIC,10,2)IncludedEvents) * 100 : 0</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[AdultCompliant]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[AdultCompliant]"
+                      name="AdultCompliant"
+                      precision="34"
+                      scale="11"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]} &gt; 0 ? (#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]} / (DT_NUMERIC,10,2)#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]}) * 100 : 0</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">AdultIncludedEvents &gt; 0 ? (AdultCompliantEvents / (DT_NUMERIC,10,2)AdultIncludedEvents) * 100 : 0</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[ChildCompliant]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By CRSP\Derived Column.Outputs[Derived Column Output].Columns[ChildCompliant]"
+                      name="ChildCompliant"
+                      precision="34"
+                      scale="11"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]} &gt; 0 ? (#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]} / (DT_NUMERIC,10,2)#{Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]}) * 100 : 0</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">ChildIncludedEvents &gt; 0 ? (ChildCompliantEvents / (DT_NUMERIC,10,2)ChildIncludedEvents) * 100 : 0</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\By CRSP\Derived Column.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\By CRSP\Derived Column.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By CRSP\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\By CRSP\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\By CRSP\Excel Destination"
+              componentClassID="Microsoft.ExcelDestination"
+              contactInfo="Excel Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Excel Destination"
+              name="Excel Destination"
+              usesDispositions="true"
+              validateExternalMetadata="False">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">'By CRSP$'</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\By CRSP\Excel Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Excel Connection Manager]"
+                  connectionManagerRefId="Package.ConnectionManagers[Excel Connection Manager]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="IgnoreFailure"
+                  hasSideEffects="true"
+                  name="Excel Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[IncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="IncludedEvents"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[IncludedEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[CompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="CompliantEvents"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[CompliantEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[AdultIncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="AdultIncludedEvents"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultIncludedEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[AdultCompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="AdultCompliantEvents"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultCompliantEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[ChildIncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="ChildIncludedEvents"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildIncludedEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[ChildCompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="ChildCompliantEvents"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildCompliantEvents]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of Race]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Copy of Race"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Race]"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of Race]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of CRSPAtEvent]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Copy of CRSPAtEvent"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[CRSPAtEvent]"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of CRSPAtEvent]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of TotalCompliant]"
+                      cachedDataType="decimal"
+                      cachedName="Copy of TotalCompliant"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[TotalCompliant]"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of TotalCompliant]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of AdultCompliant]"
+                      cachedDataType="decimal"
+                      cachedName="Copy of AdultCompliant"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultCompliant]"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of AdultCompliant]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of ChildCompliant]"
+                      cachedDataType="decimal"
+                      cachedName="Copy of ChildCompliant"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildCompliant]"
+                      lineageId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of ChildCompliant]" />
+                    <inputColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].Columns[NonCompliantServiceCount]"
+                      cachedDataType="i4"
+                      cachedName="NonCompliantServiceCount"
+                      externalMetadataColumnId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[NonCompliantServiceCount]"
+                      lineageId="Package\By CRSP\By Race.Outputs[OLE DB Source Output].Columns[NonCompliantServiceCount]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Race]"
+                      dataType="wstr"
+                      length="255"
+                      name="Race" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[IncludedEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="IncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[CompliantEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="CompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultIncludedEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="AdultIncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultCompliantEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="AdultCompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildIncludedEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="ChildIncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildCompliantEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="ChildCompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[CRSPAtEvent]"
+                      dataType="wstr"
+                      length="255"
+                      name="CRSPAtEvent" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[TotalCompliant]"
+                      dataType="wstr"
+                      length="255"
+                      name="TotalCompliant" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultCompliant]"
+                      dataType="wstr"
+                      length="255"
+                      name="AdultCompliant" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildCompliant]"
+                      dataType="wstr"
+                      length="255"
+                      name="ChildCompliant" />
+                    <externalMetadataColumn
+                      refId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[NonCompliantServiceCount]"
+                      dataType="wstr"
+                      length="255"
+                      name="NonCompliantServiceCount" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\By CRSP\Excel Destination.Outputs[Excel Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Excel Destination Error Output"
+                  synchronousInputId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By CRSP\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\By CRSP\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\By CRSP\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\By CRSP.Paths[Data Conversion Output]"
+              endId="Package\By CRSP\Excel Destination.Inputs[Excel Destination Input]"
+              name="Data Conversion Output"
+              startId="Package\By CRSP\Data Conversion.Outputs[Data Conversion Output]" />
+            <path
+              refId="Package\By CRSP.Paths[Derived Column Output]"
+              endId="Package\By CRSP\Data Conversion.Inputs[Data Conversion Input]"
+              name="Derived Column Output"
+              startId="Package\By CRSP\Derived Column.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\By CRSP.Paths[OLE DB Source Output]"
+              endId="Package\By CRSP\Derived Column.Inputs[Derived Column Input]"
+              name="OLE DB Source Output"
+              startId="Package\By CRSP\By Race.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\By race"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:DelayValidation="True"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{380AC7D0-F1B4-49EE-8611-3FE0638CC903}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="By race"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\By race\By Race"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="By Race"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select	Race1 as Race
+		, sum(TotalEvents - OmittedExcludedEvents) as IncludedEvents
+		, sum(CompliantEvents) as CompliantEvents
+		, sum(case when Population = 'Adult' then TotalEvents - OmittedExcludedEvents else 0 end) as AdultIncludedEvents
+		, sum(case when Population = 'Adult' then CompliantEvents else 0 end) as AdultCompliantEvents
+		, sum(case when Population = 'Child' then TotalEvents - OmittedExcludedEvents else 0 end) as ChildIncludedEvents
+		, sum(case when Population = 'Child' then CompliantEvents else 0 end) as ChildCompliantEvents
+, sum(NonCompliantServiceCount) as NonCompliantServiceCount
+from work.dbo.ldRaciaDisparityAggr
+group by Race1 
+order by Race1</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\By race\By Race.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[dwm-sql-01p,50000.Work]"
+                  connectionManagerRefId="Package.ConnectionManagers[dwm-sql-01p,50000.Work]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\By race\By Race.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[Race]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[Race]"
+                      length="50"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[Race]"
+                      name="Race"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[IncludedEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]"
+                      name="IncludedEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[CompliantEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]"
+                      name="CompliantEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[AdultIncludedEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]"
+                      name="AdultIncludedEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[AdultCompliantEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]"
+                      name="AdultCompliantEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[ChildIncludedEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]"
+                      name="ChildIncludedEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[ChildCompliantEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]"
+                      name="ChildCompliantEvents"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[NonCompliantServiceCount]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[NonCompliantServiceCount]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[NonCompliantServiceCount]"
+                      name="NonCompliantServiceCount"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[Race]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="Race" />
+                    <externalMetadataColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[IncludedEvents]"
+                      dataType="i4"
+                      name="IncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[CompliantEvents]"
+                      dataType="i4"
+                      name="CompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[AdultIncludedEvents]"
+                      dataType="i4"
+                      name="AdultIncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[AdultCompliantEvents]"
+                      dataType="i4"
+                      name="AdultCompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[ChildIncludedEvents]"
+                      dataType="i4"
+                      name="ChildIncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[ChildCompliantEvents]"
+                      dataType="i4"
+                      name="ChildCompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Output].ExternalColumns[NonCompliantServiceCount]"
+                      dataType="i4"
+                      name="NonCompliantServiceCount" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\By race\By Race.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[Race]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[Race]"
+                      name="Race" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[IncludedEvents]"
+                      dataType="i4"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[IncludedEvents]"
+                      name="IncludedEvents" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[CompliantEvents]"
+                      dataType="i4"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[CompliantEvents]"
+                      name="CompliantEvents" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[AdultIncludedEvents]"
+                      dataType="i4"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[AdultIncludedEvents]"
+                      name="AdultIncludedEvents" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[AdultCompliantEvents]"
+                      dataType="i4"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[AdultCompliantEvents]"
+                      name="AdultCompliantEvents" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[ChildIncludedEvents]"
+                      dataType="i4"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[ChildIncludedEvents]"
+                      name="ChildIncludedEvents" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[ChildCompliantEvents]"
+                      dataType="i4"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[ChildCompliantEvents]"
+                      name="ChildCompliantEvents" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[NonCompliantServiceCount]"
+                      dataType="i4"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[NonCompliantServiceCount]"
+                      name="NonCompliantServiceCount" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\By race\Data Conversion"
+              componentClassID="Microsoft.DataConvert"
+              contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Data Conversion"
+              name="Data Conversion"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\By race\Data Conversion.Inputs[Data Conversion Input]"
+                  name="Data Conversion Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\By race\Data Conversion.Inputs[Data Conversion Input].Columns[Race]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="Race"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[Race]" />
+                    <inputColumn
+                      refId="Package\By race\Data Conversion.Inputs[Data Conversion Input].Columns[TotalCompliant]"
+                      cachedDataType="numeric"
+                      cachedName="TotalCompliant"
+                      cachedPrecision="34"
+                      cachedScale="11"
+                      lineageId="Package\By race\Derived Column.Outputs[Derived Column Output].Columns[TotalCompliant]" />
+                    <inputColumn
+                      refId="Package\By race\Data Conversion.Inputs[Data Conversion Input].Columns[AdultCompliant]"
+                      cachedDataType="numeric"
+                      cachedName="AdultCompliant"
+                      cachedPrecision="34"
+                      cachedScale="11"
+                      lineageId="Package\By race\Derived Column.Outputs[Derived Column Output].Columns[AdultCompliant]" />
+                    <inputColumn
+                      refId="Package\By race\Data Conversion.Inputs[Data Conversion Input].Columns[ChildCompliant]"
+                      cachedDataType="numeric"
+                      cachedName="ChildCompliant"
+                      cachedPrecision="34"
+                      cachedScale="11"
+                      lineageId="Package\By race\Derived Column.Outputs[Derived Column Output].Columns[ChildCompliant]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\By race\Data Conversion.Outputs[Data Conversion Output]"
+                  exclusionGroup="1"
+                  name="Data Conversion Output"
+                  synchronousInputId="Package\By race\Data Conversion.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of Race]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="50"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of Race]"
+                      name="Copy of Race"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\By race\By Race.Outputs[OLE DB Source Output].Columns[Race]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of TotalCompliant]"
+                      dataType="decimal"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of TotalCompliant]"
+                      name="Copy of TotalCompliant"
+                      scale="2"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\By race\Derived Column.Outputs[Derived Column Output].Columns[TotalCompliant]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of AdultCompliant]"
+                      dataType="decimal"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of AdultCompliant]"
+                      name="Copy of AdultCompliant"
+                      scale="2"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\By race\Derived Column.Outputs[Derived Column Output].Columns[AdultCompliant]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of ChildCompliant]"
+                      dataType="decimal"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of ChildCompliant]"
+                      name="Copy of ChildCompliant"
+                      scale="2"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\By race\Derived Column.Outputs[Derived Column Output].Columns[ChildCompliant]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\By race\Data Conversion.Outputs[Data Conversion Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Data Conversion Error Output"
+                  synchronousInputId="Package\By race\Data Conversion.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By race\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\By race\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\By race\Derived Column"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Derived Column"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\By race\Derived Column.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\By race\Derived Column.Inputs[Derived Column Input].Columns[IncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="IncludedEvents"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Derived Column.Inputs[Derived Column Input].Columns[CompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="CompliantEvents"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Derived Column.Inputs[Derived Column Input].Columns[AdultIncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="AdultIncludedEvents"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Derived Column.Inputs[Derived Column Input].Columns[AdultCompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="AdultCompliantEvents"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Derived Column.Inputs[Derived Column Input].Columns[ChildIncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="ChildIncludedEvents"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Derived Column.Inputs[Derived Column Input].Columns[ChildCompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="ChildCompliantEvents"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\By race\Derived Column.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\By race\Derived Column.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By race\Derived Column.Outputs[Derived Column Output].Columns[TotalCompliant]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By race\Derived Column.Outputs[Derived Column Output].Columns[TotalCompliant]"
+                      name="TotalCompliant"
+                      precision="34"
+                      scale="11"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(#{Package\By race\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]} / (DT_NUMERIC,10,2)#{Package\By race\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]}) * 100</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(CompliantEvents / (DT_NUMERIC,10,2)IncludedEvents) * 100</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By race\Derived Column.Outputs[Derived Column Output].Columns[AdultCompliant]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By race\Derived Column.Outputs[Derived Column Output].Columns[AdultCompliant]"
+                      name="AdultCompliant"
+                      precision="34"
+                      scale="11"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(#{Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]} / (DT_NUMERIC,10,2)#{Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]}) * 100</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(AdultCompliantEvents / (DT_NUMERIC,10,2)AdultIncludedEvents) * 100</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\By race\Derived Column.Outputs[Derived Column Output].Columns[ChildCompliant]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\By race\Derived Column.Outputs[Derived Column Output].Columns[ChildCompliant]"
+                      name="ChildCompliant"
+                      precision="34"
+                      scale="11"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(#{Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]} / (DT_NUMERIC,10,2)#{Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]}) * 100</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(ChildCompliantEvents / (DT_NUMERIC,10,2)ChildIncludedEvents) * 100</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\By race\Derived Column.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\By race\Derived Column.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By race\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\By race\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\By race\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\By race\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\By race\Excel Destination"
+              componentClassID="Microsoft.ExcelDestination"
+              contactInfo="Excel Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Excel Destination"
+              name="Excel Destination"
+              usesDispositions="true"
+              validateExternalMetadata="False">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">'By Race$'</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\By race\Excel Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Excel Connection Manager]"
+                  connectionManagerRefId="Package.ConnectionManagers[Excel Connection Manager]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\By race\Excel Destination.Inputs[Excel Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Excel Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[IncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="IncludedEvents"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[IncludedEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[IncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[CompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="CompliantEvents"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[CompliantEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[CompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[AdultIncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="AdultIncludedEvents"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultIncludedEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultIncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[AdultCompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="AdultCompliantEvents"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultCompliantEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[AdultCompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[ChildIncludedEvents]"
+                      cachedDataType="i4"
+                      cachedName="ChildIncludedEvents"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildIncludedEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildIncludedEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[ChildCompliantEvents]"
+                      cachedDataType="i4"
+                      cachedName="ChildCompliantEvents"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildCompliantEvents]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[ChildCompliantEvents]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of Race]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Copy of Race"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Race]"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of Race]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of TotalCompliant]"
+                      cachedDataType="decimal"
+                      cachedName="Copy of TotalCompliant"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[TotalCompliant]"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of TotalCompliant]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of AdultCompliant]"
+                      cachedDataType="decimal"
+                      cachedName="Copy of AdultCompliant"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultCompliant]"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of AdultCompliant]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of ChildCompliant]"
+                      cachedDataType="decimal"
+                      cachedName="Copy of ChildCompliant"
+                      cachedScale="2"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildCompliant]"
+                      lineageId="Package\By race\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of ChildCompliant]" />
+                    <inputColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].Columns[NonCompliantServiceCount]"
+                      cachedDataType="i4"
+                      cachedName="NonCompliantServiceCount"
+                      externalMetadataColumnId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[NonCompliantServiceCount]"
+                      lineageId="Package\By race\By Race.Outputs[OLE DB Source Output].Columns[NonCompliantServiceCount]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Race]"
+                      dataType="wstr"
+                      length="255"
+                      name="Race" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[IncludedEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="IncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[CompliantEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="CompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultIncludedEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="AdultIncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultCompliantEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="AdultCompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildIncludedEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="ChildIncludedEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildCompliantEvents]"
+                      dataType="wstr"
+                      length="255"
+                      name="ChildCompliantEvents" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[TotalCompliant]"
+                      dataType="wstr"
+                      length="255"
+                      name="TotalCompliant" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[AdultCompliant]"
+                      dataType="wstr"
+                      length="255"
+                      name="AdultCompliant" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ChildCompliant]"
+                      dataType="wstr"
+                      length="255"
+                      name="ChildCompliant" />
+                    <externalMetadataColumn
+                      refId="Package\By race\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[NonCompliantServiceCount]"
+                      dataType="wstr"
+                      length="255"
+                      name="NonCompliantServiceCount" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\By race\Excel Destination.Outputs[Excel Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Excel Destination Error Output"
+                  synchronousInputId="Package\By race\Excel Destination.Inputs[Excel Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\By race\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\By race\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\By race\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\By race\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\By race.Paths[Data Conversion Output]"
+              endId="Package\By race\Excel Destination.Inputs[Excel Destination Input]"
+              name="Data Conversion Output"
+              startId="Package\By race\Data Conversion.Outputs[Data Conversion Output]" />
+            <path
+              refId="Package\By race.Paths[Derived Column Output]"
+              endId="Package\By race\Data Conversion.Inputs[Data Conversion Input]"
+              name="Derived Column Output"
+              startId="Package\By race\Derived Column.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\By race.Paths[OLE DB Source Output]"
+              endId="Package\By race\Derived Column.Inputs[Derived Column Input]"
+              name="OLE DB Source Output"
+              startId="Package\By race\By Race.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Foreach Loop Container"
+      DTS:CreationName="STOCK:FOREACHLOOP"
+      DTS:Description="Foreach Loop Container"
+      DTS:DTSID="{0A735452-25C4-4B79-8501-425F9554B83F}"
+      DTS:ExecutableType="STOCK:FOREACHLOOP"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Foreach Loop Container">
+      <DTS:ForEachEnumerator
+        DTS:CreationName="Microsoft.ForEachFileEnumerator"
+        DTS:DTSID="{C8CC2FED-5CE8-4A5E-A707-9122E1B6587D}"
+        DTS:ObjectName="{419AF0B8-5A7A-497A-80A5-036625B2C8DD}">
+        <DTS:ObjectData>
+          <ForEachFileEnumeratorProperties>
+            <FEFEProperty
+              Folder="\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\outgoing\" />
+            <FEFEProperty
+              FileSpec="*.xls" />
+            <FEFEProperty
+              FileNameRetrievalType="0" />
+            <FEFEProperty
+              Recurse="0" />
+          </ForEachFileEnumeratorProperties>
+        </DTS:ObjectData>
+      </DTS:ForEachEnumerator>
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\ArchiveProcessedFiles"
+          DTS:CreationName="Microsoft.FileSystemTask"
+          DTS:DelayValidation="True"
+          DTS:Description="File System Task"
+          DTS:DTSID="{E62B4AAB-EDF4-47E0-BF32-BED582C0F7CE}"
+          DTS:ExecutableType="Microsoft.FileSystemTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="ArchiveProcessedFiles"
+          DTS:TaskContact="File System Task;Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <FileSystemData
+              TaskOperationType="MoveFile"
+              TaskSourcePath="User::outgoingfolder"
+              TaskIsSourceVariable="True"
+              TaskDestinationPath="User::ArchiveFolder"
+              TaskIsDestinationVariable="True" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Send Mail Task"
+          DTS:CreationName="Microsoft.SendMailTask"
+          DTS:DelayValidation="True"
+          DTS:Description="Send Mail Task"
+          DTS:DTSID="{4D13C64E-521F-4C11-925D-1A8A4E069DB3}"
+          DTS:ExecutableType="Microsoft.SendMailTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Send Mail Task"
+          DTS:TaskContact="Send Mail Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:PropertyExpression
+            DTS:Name="FileAttachments">@[User::outgoingfolder]</DTS:PropertyExpression>
+          <DTS:ObjectData>
+            <SendMailTask:SendMailTaskData
+              SendMailTask:SMTPServer="{D2F8179B-A8EA-48B3-9AFF-C55DF4F9E9C8}"
+              SendMailTask:From="ldevabathini@dwihn.org"
+              SendMailTask:To="gherman@dwihn.org"
+              SendMailTask:CC="ldevabathini@dwihn.org"
+              SendMailTask:Subject="RacialDisparity Report"
+              SendMailTask:MessageSourceType="Variable"
+              SendMailTask:MessageSource="User::Message" xmlns:SendMailTask="www.microsoft.com/sqlserver/dts/tasks/sendmailtask">
+              <SendMailTask:Attachments
+                SendMailTask:FileName="\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\Outgoing\" />
+            </SendMailTask:SendMailTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{CE2A6E95-B94C-4AF5-8CCD-18109BB6096F}"
+          DTS:From="Package\Foreach Loop Container\Send Mail Task"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Foreach Loop Container\ArchiveProcessedFiles" />
+      </DTS:PrecedenceConstraints>
+      <DTS:ForEachVariableMappings>
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{C2086546-CB97-456A-A42B-685A13998681}"
+          DTS:ObjectName="{C2086546-CB97-456A-A42B-685A13998681}"
+          DTS:ValueIndex="0"
+          DTS:VariableName="User::outgoingfolder" />
+      </DTS:ForEachVariableMappings>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\LoadDetails"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{99B1B7CB-DC4E-408B-AC37-FA538E68F489}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="LoadDetails"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\LoadDetails\By Race"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="By Race"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT *
+  FROM [Work].[dbo].[LDRacialDisparityDetails]</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\LoadDetails\By Race.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[dwm-sql-01p,50000.Work]"
+                  connectionManagerRefId="Package.ConnectionManagers[dwm-sql-01p,50000.Work]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Race1]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Race1]"
+                      length="50"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Race1]"
+                      name="Race1"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Event ID]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Event ID]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Event ID]"
+                      name="Event ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[EventDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[EventDate]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[EventDate]"
+                      name="EventDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Member ID]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Member ID]"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Member ID]"
+                      name="Member ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Consumer Last Name]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Consumer Last Name]"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Consumer Last Name]"
+                      name="Consumer Last Name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Consumer First Name]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Consumer First Name]"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Consumer First Name]"
+                      name="Consumer First Name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Medicaid ID]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Medicaid ID]"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Medicaid ID]"
+                      name="Medicaid ID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Population]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Population]"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Population]"
+                      name="Population"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Disposition]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Disposition]"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Disposition]"
+                      name="Disposition"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[RequestDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[RequestDate]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[RequestDate]"
+                      name="RequestDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[ServiceDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[ServiceDate]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[ServiceDate]"
+                      name="ServiceDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[CRSP at Event]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[CRSP at Event]"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[CRSP at Event]"
+                      name="CRSP at Event"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Event Category]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Event Category]"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Event Category]"
+                      name="Event Category"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Race1]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="Race1" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Event ID]"
+                      dataType="r8"
+                      name="Event ID" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[EventDate]"
+                      dataType="dbDate"
+                      name="EventDate" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Member ID]"
+                      dataType="wstr"
+                      length="255"
+                      name="Member ID" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Consumer Last Name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Consumer Last Name" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Consumer First Name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Consumer First Name" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Medicaid ID]"
+                      dataType="wstr"
+                      length="255"
+                      name="Medicaid ID" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Population]"
+                      dataType="wstr"
+                      length="255"
+                      name="Population" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Disposition]"
+                      dataType="wstr"
+                      length="255"
+                      name="Disposition" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[RequestDate]"
+                      dataType="dbDate"
+                      name="RequestDate" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[ServiceDate]"
+                      dataType="dbDate"
+                      name="ServiceDate" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[CRSP at Event]"
+                      dataType="wstr"
+                      length="255"
+                      name="CRSP at Event" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].ExternalColumns[Event Category]"
+                      dataType="wstr"
+                      length="255"
+                      name="Event Category" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Race1]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Race1]"
+                      name="Race1" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Event ID]"
+                      dataType="r8"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Event ID]"
+                      name="Event ID" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[EventDate]"
+                      dataType="dbDate"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[EventDate]"
+                      name="EventDate" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Member ID]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Member ID]"
+                      name="Member ID" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Consumer Last Name]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Consumer Last Name]"
+                      name="Consumer Last Name" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Consumer First Name]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Consumer First Name]"
+                      name="Consumer First Name" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Medicaid ID]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Medicaid ID]"
+                      name="Medicaid ID" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Population]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Population]"
+                      name="Population" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Disposition]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Disposition]"
+                      name="Disposition" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[RequestDate]"
+                      dataType="dbDate"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[RequestDate]"
+                      name="RequestDate" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[ServiceDate]"
+                      dataType="dbDate"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[ServiceDate]"
+                      name="ServiceDate" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[CRSP at Event]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[CRSP at Event]"
+                      name="CRSP at Event" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Event Category]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[Event Category]"
+                      name="Event Category" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\LoadDetails\Data Conversion"
+              componentClassID="Microsoft.DataConvert"
+              contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Data Conversion"
+              name="Data Conversion"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\LoadDetails\Data Conversion.Inputs[Data Conversion Input]"
+                  name="Data Conversion Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\LoadDetails\Data Conversion.Inputs[Data Conversion Input].Columns[Race1]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="Race1"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Race1]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Output]"
+                  exclusionGroup="1"
+                  name="Data Conversion Output"
+                  synchronousInputId="Package\LoadDetails\Data Conversion.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of Race1]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="50"
+                      lineageId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of Race1]"
+                      name="Copy of Race1"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Race1]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Data Conversion Error Output"
+                  synchronousInputId="Package\LoadDetails\Data Conversion.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\LoadDetails\Excel Destination"
+              componentClassID="Microsoft.ExcelDestination"
+              contactInfo="Excel Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Excel Destination"
+              name="Excel Destination"
+              usesDispositions="true"
+              validateExternalMetadata="False">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">Details$</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\LoadDetails\Excel Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Excel Connection Manager]"
+                  connectionManagerRefId="Package.ConnectionManagers[Excel Connection Manager]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="IgnoreFailure"
+                  hasSideEffects="true"
+                  name="Excel Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[Event ID]"
+                      cachedDataType="r8"
+                      cachedName="Event ID"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Event ID]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Event ID]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[EventDate]"
+                      cachedDataType="dbDate"
+                      cachedName="EventDate"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[EventDate]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[EventDate]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[Member ID]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Member ID"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Member ID]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Member ID]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[Consumer Last Name]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Consumer Last Name"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Consumer Last Name]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Consumer Last Name]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[Consumer First Name]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Consumer First Name"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Consumer First Name]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Consumer First Name]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[Medicaid ID]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Medicaid ID"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Medicaid ID]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Medicaid ID]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[Population]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Population"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Population]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Population]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[Disposition]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Disposition"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Disposition]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Disposition]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[RequestDate]"
+                      cachedDataType="dbDate"
+                      cachedName="RequestDate"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[RequestDate]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[RequestDate]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[ServiceDate]"
+                      cachedDataType="dbDate"
+                      cachedName="ServiceDate"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ServiceDate]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[ServiceDate]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[CRSP at Event]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="CRSP at Event"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[CRSP at Event]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[CRSP at Event]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[Event Category]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Event Category"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Event Category]"
+                      lineageId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output].Columns[Event Category]" />
+                    <inputColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].Columns[Copy of Race1]"
+                      cachedDataType="wstr"
+                      cachedLength="50"
+                      cachedName="Copy of Race1"
+                      externalMetadataColumnId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Race1]"
+                      lineageId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Output].Columns[Copy of Race1]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Race1]"
+                      dataType="wstr"
+                      length="255"
+                      name="Race1" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Event ID]"
+                      dataType="wstr"
+                      length="255"
+                      name="Event ID" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[EventDate]"
+                      dataType="wstr"
+                      length="255"
+                      name="EventDate" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Member ID]"
+                      dataType="wstr"
+                      length="255"
+                      name="Member ID" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Consumer Last Name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Consumer Last Name" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Consumer First Name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Consumer First Name" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Medicaid ID]"
+                      dataType="wstr"
+                      length="255"
+                      name="Medicaid ID" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Population]"
+                      dataType="wstr"
+                      length="255"
+                      name="Population" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Disposition]"
+                      dataType="wstr"
+                      length="255"
+                      name="Disposition" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[RequestDate]"
+                      dataType="wstr"
+                      length="255"
+                      name="RequestDate" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[ServiceDate]"
+                      dataType="wstr"
+                      length="255"
+                      name="ServiceDate" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[CRSP at Event]"
+                      dataType="wstr"
+                      length="255"
+                      name="CRSP at Event" />
+                    <externalMetadataColumn
+                      refId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input].ExternalColumns[Event Category]"
+                      dataType="wstr"
+                      length="255"
+                      name="Event Category" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\LoadDetails\Excel Destination.Outputs[Excel Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Excel Destination Error Output"
+                  synchronousInputId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\LoadDetails\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\LoadDetails\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\LoadDetails\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\LoadDetails\Excel Destination.Outputs[Excel Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\LoadDetails.Paths[Data Conversion Output]"
+              endId="Package\LoadDetails\Excel Destination.Inputs[Excel Destination Input]"
+              name="Data Conversion Output"
+              startId="Package\LoadDetails\Data Conversion.Outputs[Data Conversion Output]" />
+            <path
+              refId="Package\LoadDetails.Paths[OLE DB Source Output]"
+              endId="Package\LoadDetails\Data Conversion.Inputs[Data Conversion Input]"
+              name="OLE DB Source Output"
+              startId="Package\LoadDetails\By Race.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{3EF53D44-DCE9-444E-A646-CED8E62308FE}"
+      DTS:From="Package\By race"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\By CRSP" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{193493D5-CD6B-49A6-A534-CE3FCAC25A29}"
+      DTS:From="Package\By CRSP"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\LoadDetails" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{7FE54272-476D-47B8-86B8-1A9B965385DF}"
+      DTS:From="Package\AddTemplateExcelFiletofolder"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\By race" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{82D4F1F6-169F-4BE8-9DDE-48159733CB05}"
+      DTS:From="Package\AddDatetotheexcelfile"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Foreach Loop Container" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{1EA4608F-258B-436F-9610-EC655F648CED}"
+      DTS:From="Package\LoadDetails"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\AddDatetotheexcelfile" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="181,42"
+          Id="Package\AddDatetotheexcelfile"
+          TopLeft="167,361.5" />
+        <NodeLayout
+          Size="218,42"
+          Id="Package\AddTemplateExcelFiletofolder"
+          TopLeft="145,27" />
+        <NodeLayout
+          Size="119,42"
+          Id="Package\By CRSP"
+          TopLeft="199,169" />
+        <NodeLayout
+          Size="114,42"
+          Id="Package\By race"
+          TopLeft="198,99" />
+        <NodeLayout
+          Size="181,42"
+          Id="Package\Foreach Loop Container\ArchiveProcessedFiles"
+          TopLeft="29,130" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Foreach Loop Container\Send Mail Task"
+          TopLeft="46,41" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
+          TopLeft="120.25,83">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,47"
+              Start="0,0"
+              End="0,39.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,39.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="255,227"
+          Size="255,270"
+          Id="Package\Foreach Loop Container"
+          TopLeft="148,484" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="256.75,141">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,28"
+              Start="0,0"
+              End="0,20.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="254.5,69">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,30"
+              Start="0,0"
+              End="0,22.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="257.5,403.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="18,80.5"
+              Start="0,0"
+              End="18,73">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.25" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,36.25"
+                    Point2="0,40.25"
+                    Point3="4,40.25" />
+                  <mssgle:LineSegment
+                    End="14,40.25" />
+                  <mssgle:CubicBezierSegment
+                    Point1="14,40.25"
+                    Point2="18,40.25"
+                    Point3="18,44.25" />
+                  <mssgle:LineSegment
+                    End="18,73" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="133,42"
+          Id="Package\LoadDetails"
+          TopLeft="184,266" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="258.5,211">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-8,55"
+              Start="0,0"
+              End="-8,47.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.5"
+                    Point2="0,27.5"
+                    Point3="-4,27.5" />
+                  <mssgle:LineSegment
+                    End="-4,27.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-4,27.5"
+                    Point2="-8,27.5"
+                    Point3="-8,31.5" />
+                  <mssgle:LineSegment
+                    End="-8,47.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="254,308">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,53.5"
+              Start="0,0"
+              End="0,46">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,46" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\By CRSP">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="156,42"
+          Id="Package\By CRSP\Data Conversion"
+          TopLeft="189,166" />
+        <NodeLayout
+          Size="154,42"
+          Id="Package\By CRSP\Derived Column"
+          TopLeft="189,83" />
+        <NodeLayout
+          Size="117,42"
+          Id="Package\By CRSP\By Race"
+          TopLeft="207,10" />
+        <NodeLayout
+          Size="159,42"
+          Id="Package\By CRSP\Excel Destination"
+          TopLeft="186,266" />
+        <EdgeLayout
+          Id="Package\By CRSP.Paths[Data Conversion Output]"
+          TopLeft="266.25,208">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58"
+              Start="0,0"
+              End="0,50.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,50.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\By CRSP.Paths[OLE DB Source Output]"
+          TopLeft="265.75,52">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31"
+              Start="0,0"
+              End="0,23.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\By CRSP.Paths[Derived Column Output]"
+          TopLeft="266.5,125">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41"
+              Start="0,0"
+              End="0,33.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\By CRSP\By Race">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\By CRSP\Excel Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\By race">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="154,42"
+          Id="Package\By race\Derived Column"
+          TopLeft="190,110" />
+        <NodeLayout
+          Size="156,42"
+          Id="Package\By race\Data Conversion"
+          TopLeft="188,197" />
+        <NodeLayout
+          Size="117,42"
+          Id="Package\By race\By Race"
+          TopLeft="198,31" />
+        <NodeLayout
+          Size="159,42"
+          Id="Package\By race\Excel Destination"
+          TopLeft="180,289" />
+        <EdgeLayout
+          Id="Package\By race.Paths[OLE DB Source Output]"
+          TopLeft="256.5,73">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="10.5,37"
+              Start="0,0"
+              End="10.5,29.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,14.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,14.5"
+                    Point2="0,18.5"
+                    Point3="4,18.5" />
+                  <mssgle:LineSegment
+                    End="6.5,18.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="6.5,18.5"
+                    Point2="10.5,18.5"
+                    Point3="10.5,22.5" />
+                  <mssgle:LineSegment
+                    End="10.5,29.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\By race.Paths[Derived Column Output]"
+          TopLeft="266.5,152">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45"
+              Start="0,0"
+              End="0,37.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\By race.Paths[Data Conversion Output]"
+          TopLeft="262.75,239">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,50"
+              Start="0,0"
+              End="0,42.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,42.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\By race\By Race">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\By race\Excel Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\LoadDetails">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="117,42"
+          Id="Package\LoadDetails\By Race"
+          TopLeft="207,10" />
+        <NodeLayout
+          Size="159,42"
+          Id="Package\LoadDetails\Excel Destination"
+          TopLeft="185,180" />
+        <NodeLayout
+          Size="156,42"
+          Id="Package\LoadDetails\Data Conversion"
+          TopLeft="197,91" />
+        <EdgeLayout
+          Id="Package\LoadDetails.Paths[OLE DB Source Output]"
+          TopLeft="265.5,52">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="9.5,39"
+              Start="0,0"
+              End="9.5,31.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,15.5"
+                    Point2="0,19.5"
+                    Point3="4,19.5" />
+                  <mssgle:LineSegment
+                    End="5.5,19.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="5.5,19.5"
+                    Point2="9.5,19.5"
+                    Point3="9.5,23.5" />
+                  <mssgle:LineSegment
+                    End="9.5,31.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\LoadDetails.Paths[Data Conversion Output]"
+          TopLeft="275,133">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-10.5,47"
+              Start="0,0"
+              End="-10.5,39.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.5"
+                    Point2="0,23.5"
+                    Point3="-4,23.5" />
+                  <mssgle:LineSegment
+                    End="-6.5,23.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-6.5,23.5"
+                    Point2="-10.5,23.5"
+                    Point3="-10.5,27.5" />
+                  <mssgle:LineSegment
+                    End="-10.5,39.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\LoadDetails\By Race">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\LoadDetails\Excel Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

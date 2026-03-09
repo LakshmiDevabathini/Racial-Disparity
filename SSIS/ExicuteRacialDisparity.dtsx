@@ -1,0 +1,336 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="6/13/2023 8:30:50 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="D002098"
+  DTS:CreatorName="dwmha\ldevabathini"
+  DTS:DelayValidation="True"
+  DTS:Description="SSIS Package Description"
+  DTS:DTSID="{9C6AC81E-A1FE-4813-8169-2D24DF5B890C}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.1301.433"
+  DTS:LocaleID="1033"
+  DTS:MaxErrorCount="0"
+  DTS:ObjectName="RacialDisparity_SQL"
+  DTS:VersionBuild="39"
+  DTS:VersionGUID="{FE280328-F1B8-4564-A84B-3C14633D364A}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[CreateFlatFile.dtsx]"
+      DTS:CreationName="FILE"
+      DTS:DTSID="{F93074BF-8F6B-4DC2-9BDC-9F5236F3B755}"
+      DTS:ObjectName="CreateFlatFile.dtsx">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\SSIS\CreateFlatFile.dtsx" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{E633429A-90A9-427A-AFCC-4FE4FE84A696}"
+      DTS:ObjectName="DestinationConnectionOLEDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=dwm-sql-01p,50000;Initial Catalog=Work;Provider=SQLNCLI11;Integrated Security=SSPI;Auto Translate=false;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[RacialDisparity_SQL.dtsx]"
+      DTS:CreationName="FILE"
+      DTS:DTSID="{98C33B26-F80D-4172-915B-72CDF4E60E01}"
+      DTS:ObjectName="RacialDisparity_SQL.dtsx">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\SSIS\RacialDisparity_SQL.dtsx" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SourceConnectionExcel]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{588762B1-E107-400A-A60C-467A65ADB176}"
+      DTS:ObjectName="SourceConnectionExcel">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\InComing\PIEventReport_2023.xls;Extended Properties=&quot;EXCEL 8.0;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{465F54B8-71C5-4D5C-BE94-643AEFACBE5D}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="ArchiveFolder">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\InComing\Archive</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4FA2B6DC-388B-4021-9799-6C549F830DA2}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="FINDSTRING( @[User::SourceFolderPath] ,&quot;PIEventReport&quot;, 1)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="CheckFileExists">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C77BAFF6-E559-4D01-BD0F-3051747885FD}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="FileToSearch">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8BB4B644-237F-4C98-9A46-773B4A89F8FC}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="IsFound">
+      <DTS:VariableValue
+        DTS:DataType="11">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8C65B997-AB23-4745-A668-EAAE9AD7CE04}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[User::SourceFolderPath] + &quot;_&quot;+(DT_WSTR, 4) YEAR(GETDATE())+ RIGHT(&quot;0&quot; + (DT_WSTR, 2) MONTH(GETDATE()), 2) &#xA;&#xA;+ RIGHT(&quot;0&quot; + (DT_WSTR, 2) DAY( GETDATE()),2)+&quot;_&quot;+Right(&quot;0&quot; + (DT_STR,2,1252) DatePart(&quot;hh&quot;,getdate()),2) &#xA;+ Right(&quot;0&quot; + (DT_STR,2,1252) DatePart(&quot;mi&quot;,getdate()),2)+ &quot;_Processed&quot;+&quot;.xls&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceFileAddDate">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\InComing_20250217_1413_Processed.xls</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{52F86E56-4D60-496A-9441-0EA67B3BA88A}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceFolderPath">
+      <DTS:VariableValue
+        DTS:DataType="8">\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\InComing</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Check IF File Exists"
+      DTS:CreationName="STOCK:FOREACHLOOP"
+      DTS:Description="Foreach Loop Container"
+      DTS:DTSID="{97D0D674-1FD3-4168-AAC6-8439529B64AF}"
+      DTS:ExecutableType="STOCK:FOREACHLOOP"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Check IF File Exists">
+      <DTS:ForEachEnumerator
+        DTS:CreationName="Microsoft.ForEachFileEnumerator"
+        DTS:DTSID="{EABE5537-5663-4AEC-BB56-86CBE3F0508C}"
+        DTS:ObjectName="{C7CD549E-7438-46C1-8B15-F01BB6A5EAF6}">
+        <DTS:ObjectData>
+          <ForEachFileEnumeratorProperties>
+            <FEFEProperty
+              Folder="\\dwm-sql-01p\SSIS_Solutions\RacialDisparity\InComing\" />
+            <FEFEProperty
+              FileSpec="*.xls" />
+            <FEFEProperty
+              FileNameRetrievalType="0" />
+            <FEFEProperty
+              Recurse="0" />
+          </ForEachFileEnumeratorProperties>
+        </DTS:ObjectData>
+      </DTS:ForEachEnumerator>
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Check IF File Exists\Expression Task"
+          DTS:CreationName="Microsoft.ExpressionTask"
+          DTS:Description="Expression Task"
+          DTS:DTSID="{88BEACE4-174E-4303-B59F-069CBBCF227E}"
+          DTS:ExecutableType="Microsoft.ExpressionTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Expression Task"
+          DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExpressionTask
+              Expression="@[User::IsFound] = @[User::CheckFileExists] != @[User::FileToSearch] ? TRUE : FALSE" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:ForEachVariableMappings>
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{FF3C9BE0-5A75-4C34-B52C-E7E7B2F7AE4B}"
+          DTS:ObjectName="{FF3C9BE0-5A75-4C34-B52C-E7E7B2F7AE4B}"
+          DTS:ValueIndex="0"
+          DTS:VariableName="User::SourceFolderPath" />
+      </DTS:ForEachVariableMappings>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Execute Flatfile"
+      DTS:CreationName="Microsoft.ExecutePackageTask"
+      DTS:DelayValidation="True"
+      DTS:Description="Execute Package Task"
+      DTS:DTSID="{443C2AB6-A53B-4198-97E3-FD83CD4EC6FD}"
+      DTS:ExecutableType="Microsoft.ExecutePackageTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Execute Flatfile"
+      DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <ExecutePackageTask>
+          <Connection>{F93074BF-8F6B-4DC2-9BDC-9F5236F3B755}</Connection>
+        </ExecutePackageTask>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Execute Racial Disparity DB Load"
+      DTS:CreationName="Microsoft.ExecutePackageTask"
+      DTS:DelayValidation="True"
+      DTS:Description="Execute Package Task"
+      DTS:DTSID="{7D522647-055B-4365-A5AE-CE89FEA16882}"
+      DTS:ExecutableType="Microsoft.ExecutePackageTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Execute Racial Disparity DB Load"
+      DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <ExecutePackageTask>
+          <Connection>{98C33B26-F80D-4172-915B-72CDF4E60E01}</Connection>
+        </ExecutePackageTask>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{C5272C0F-EF94-4669-B935-D4D196B2AFF6}"
+      DTS:EvalOp="1"
+      DTS:Expression="@[User::IsFound] = @[User::CheckFileExists] != @[User::FileToSearch] ? TRUE : FALSE"
+      DTS:From="Package\Check IF File Exists"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Execute Racial Disparity DB Load" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{B8CAA2EB-7A1C-4125-95B8-C84BA73DE70D}"
+      DTS:From="Package\Execute Racial Disparity DB Load"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Execute Flatfile" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="155,42"
+          Id="Package\Check IF File Exists\Expression Task"
+          TopLeft="38,55" />
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="255,196"
+          Size="255,239"
+          Id="Package\Check IF File Exists"
+          TopLeft="14,10" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Execute Flatfile"
+          TopLeft="372,170" />
+        <NodeLayout
+          Size="234,42"
+          Id="Package\Execute Racial Disparity DB Load"
+          TopLeft="370,27" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="269,129.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="101,-81.5"
+              Start="0,0"
+              End="93.5,-81.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="46.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="46.5,0"
+                    Point2="50.5,0"
+                    Point3="50.5,-4" />
+                  <mssgle:LineSegment
+                    End="50.5,-77.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="50.5,-77.5"
+                    Point2="50.5,-81.5"
+                    Point3="54.5,-81.5" />
+                  <mssgle:LineSegment
+                    End="93.5,-81.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="42.5,1,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="487,69">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-40,101"
+              Start="0,0"
+              End="-40,93.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,46.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,46.5"
+                    Point2="0,50.5"
+                    Point3="-4,50.5" />
+                  <mssgle:LineSegment
+                    End="-36,50.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-36,50.5"
+                    Point2="-40,50.5"
+                    Point3="-40,54.5" />
+                  <mssgle:LineSegment
+                    End="-40,93.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
